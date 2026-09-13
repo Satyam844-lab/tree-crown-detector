@@ -5,10 +5,10 @@ import os
 import urllib.request
 from PIL import Image
 from deepforest import main
-from segment_anything import sam_model_registry, SamPredictor
+from mobile_sam import sam_model_registry, SamPredictor
 
-CHECKPOINT_PATH = "sam_vit_b_01ec64.pth"
-CHECKPOINT_URL = "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
+CHECKPOINT_PATH = "mobile_sam.pt"
+CHECKPOINT_URL = "https://github.com/ChaoningZhang/MobileSAM/raw/master/weights/mobile_sam.pt"
 
 @st.cache_resource
 def load_models():
@@ -16,7 +16,7 @@ def load_models():
         urllib.request.urlretrieve(CHECKPOINT_URL, CHECKPOINT_PATH)
     m = main.deepforest()
     m.load_model(model_name="weecology/deepforest-tree", revision="main")
-    sam = sam_model_registry["vit_b"](checkpoint=CHECKPOINT_PATH)
+    sam = sam_model_registry["vit_t"](checkpoint=CHECKPOINT_PATH)
     predictor = SamPredictor(sam)
     return m, predictor
 
@@ -48,13 +48,13 @@ def analyze_forest(image, confidence_threshold, meters_per_pixel):
 
 st.set_page_config(page_title="Tree Crown Detection & Canopy Area Estimator")
 st.title("Tree Crown Detection & Canopy Area Estimator")
-
 st.markdown("""
 ### Known limitations — read before trusting the output
-- **Undercounts dense, closed canopy.** In overlapping-crown forest, adjacent trees are often merged into a single detection. Tree count and canopy area are more reliable in open/sparse canopy than dense forest.
-- **No single "correct" confidence threshold.** Lower thresholds catch more real trees but add false positives on bare ground/shadow; higher thresholds miss real trees in dense scenes. Move the slider and compare — don't trust one number.
-- **Resolution must be accurate.** You must know your image's actual meters/pixel value. A wrong value silently produces a wrong area — this tool cannot detect that for you.
-- **Not validated against ground-truth counts.** Numbers shown are model output, not field-verified measurements.
+- **Undercounts dense, closed canopy.** Adjacent trees are often merged into a single detection in overlapping-crown forest.
+- **No single "correct" confidence threshold** — lower values catch more real trees but add false positives; higher values miss real trees in dense scenes.
+- **Resolution must be accurate** — a wrong meters/pixel value silently produces a wrong area.
+- **Segmentation uses MobileSAM**, a compressed model chosen to fit free-tier hosting memory limits — mask precision may be lower than the full SAM model tested during development.
+- **Not validated against ground-truth counts.**
 """)
 
 uploaded = st.file_uploader("Upload forest imagery (RGB)", type=["png", "jpg", "jpeg"])
@@ -65,7 +65,6 @@ if uploaded is not None:
     image = np.array(Image.open(uploaded).convert("RGB"))
     with st.spinner("Running detection and segmentation..."):
         overlay, summary = analyze_forest(image, threshold, resolution)
-
     st.image(overlay, caption="Detected crowns (green = segmented)", use_column_width=True)
     st.subheader("Results")
     st.write(f"**Trees detected:** {summary['trees_detected']}")
