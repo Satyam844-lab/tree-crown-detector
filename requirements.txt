@@ -1,6 +1,6 @@
 deepforest==2.1.0
 segment-anything==1.0
-gradio==6.26.0
+streamlit
 opencv-python-headless
 numpy
 torch
