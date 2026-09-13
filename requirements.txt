@@ -1,6 +1,6 @@
-deepforest==2.1.0
-segment-anything==1.0
 streamlit
+deepforest==2.1.0
+git+https://github.com/ChaoningZhang/MobileSAM.git
 opencv-python-headless
 numpy
 torch
