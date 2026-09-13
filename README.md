@@ -2,7 +2,7 @@
 
 Detects individual tree crowns in high-resolution RGB aerial/satellite imagery, segments each detected crown, and estimates canopy area and percent cover. Built to explore what an automated, honestly-scoped canopy assessment tool can and can't do — relevant to use cases like carbon-market canopy verification, where overconfident numbers are worse than admitted uncertainty.
 
-**Live demo:** [add your deployed URL here]
+**Live demo:** https://tree-crown-detector-ejhvugksijnxndvpv3bpwh.streamlit.app/
 
 ---
 
