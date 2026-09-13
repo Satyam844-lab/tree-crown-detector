@@ -65,7 +65,7 @@ if uploaded is not None:
     image = np.array(Image.open(uploaded).convert("RGB"))
     with st.spinner("Running detection and segmentation..."):
         overlay, summary = analyze_forest(image, threshold, resolution)
-    st.image(overlay, caption="Detected crowns (green = segmented)", use_column_width=True)
+    st.image(overlay, caption="Detected crowns (green = segmented)", use_container_width=True)
     st.subheader("Results")
     st.write(f"**Trees detected:** {summary['trees_detected']}")
     st.write(f"**Total canopy area:** {summary['total_canopy_area_m2']} m²")
