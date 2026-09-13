@@ -10,7 +10,7 @@ This tool detects individual tree crowns in high-resolution RGB aerial/satellite
 
 ##  See it in action
 
-Test images are included in this repo under [`example/`](./example) — you can run the live demo on them immediately, no need to source your own imagery first.
+Test images are included in this repo under as "test....png" — you can run the live demo on them immediately, no need to source your own imagery first.
 
 ### Open canopy — clean detection
 ![Detection boxes on open scrub canopy](example/scrub_detection_boxes.png)
