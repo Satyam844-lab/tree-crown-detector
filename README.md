@@ -1,35 +1,35 @@
-# 🌳 Tree Crown Detection & Canopy Area Estimator
+# Tree Crown Detection & Canopy Area Estimator
 
 Point it at a forest, and it finds the trees.
 
 This tool detects individual tree crowns in high-resolution RGB aerial/satellite imagery, segments each one precisely, and estimates canopy area and percent cover — built around a simple principle: **a rough tool that admits its limits beats a polished one that invents figures.** Every number this repo claims is backed by an actual test run, documented below with the real output.
 
-**🔗 Live demo:** [add your deployed URL here]
+**🔗 Live demo:** [https://tree-crown-detector-ejhvugksijnxndvpv3bpwh.streamlit.app/]
 
 ---
 
-## 🖼️ See it in action
+##  See it in action
 
-Test images are included in this repo under [`examples/`](./examples) — you can run the live demo on them immediately, no need to source your own imagery first.
+Test images are included in this repo under [`example/`](./example) — you can run the live demo on them immediately, no need to source your own imagery first.
 
 ### Open canopy — clean detection
-![Detection boxes on open scrub canopy](examples/scrub_detection_boxes.png)
+![Detection boxes on open scrub canopy](example/scrub_detection_boxes.png)
 
 *DeepForest's raw output on a sparse/scrub forest scene (Ordway-Swisher Biological Station, FL). 55 candidate crowns detected, confidence up to 0.80 — clean, well-separated boxes on individual shrub/tree crowns.*
 
 ### Dense canopy — full pipeline result
-![Segmented crowns on dense canopy](examples/dense_canopy_result.png)
+![Segmented crowns on dense canopy](example/dense_canopy_result.png)
 
 *The complete pipeline (DeepForest → threshold → MobileSAM) on dense, closed-canopy NEON imagery. Green regions are real segmented crown shapes, not boxes — 44 trees detected, 41.6% canopy cover at threshold 0.3.*
 
 ### Dense canopy — where it struggles
-![Merged crown detections on dense canopy](examples/dense_canopy_merged_crowns.png)
+![Merged crown detections on dense canopy](example/dense_canopy_merged_crowns.png)
 
 *The same dense scene at a lower threshold. Notice the oversized boxes spanning multiple treetops — this is the merged-crown problem described in Limitations below, shown honestly rather than cropped out.*
 
 ---
 
-## ⚙️ How it works
+##  How it works
 
 1. Upload an RGB forest image (ideally ~10cm/pixel resolution or finer)
 2. **DeepForest** (a pretrained RetinaNet, `weecology/deepforest-tree`) proposes candidate crowns as bounding boxes with confidence scores
@@ -41,7 +41,7 @@ The confidence threshold and resolution are live, adjustable inputs — not hard
 
 ---
 
-## 📊 What we actually found
+##  What we actually found
 
 **Confidence drops sharply in dense canopy.** Top detection confidence was 0.80 on the open scrub scene, but only 0.69 on dense canopy, with most detections there sitting between 0.17–0.52. The model is genuinely less certain in harder scenes — a real, repeatable pattern, not noise.
 
@@ -72,14 +72,14 @@ On the open scrub image, by contrast, 0.5 worked cleanly. **The "right" threshol
 
 ---
 
-## 🧰 Tech stack
+##  Tech stack
 
 - **Detection:** DeepForest 2.1.0 (`weecology/deepforest-tree`, pretrained RetinaNet)
 - **Segmentation:** MobileSAM (Tiny-ViT encoder)
 - **UI:** Streamlit (deployed) / Gradio (alternate version included)
 - **Test imagery:** DeepForest's bundled sample (`OSBS_029.png`) and NEON AOP RGB camera data (DP3.30010.001, 10cm/pixel)
 
-## 🚀 Running locally
+##  Running locally
 
 ```bash
 pip install -r requirements.txt
